@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>To-Do List</title>
+
+<style>
+    body {
+        background: url('background.jpg') no-repeat center top;
+        background-size: cover;
+
+        font-family:'Lucida Sans';
+        display: flex;
+        justify-content: center ;
+        padding-top: 30px;
+        min-height: 10vh;
+}
+
+    h2 {
+        font-weight: bold;
+        font-style: italic;
+}
+
+
+    .boxStyle{
+        width:350px;
+        background:rgb(199, 216, 222);
+        padding:20px;
+        border-radius:12px;
+        box-shadow:0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2{ text-align:center; }
+
+    .dataArea{
+        display:flex;
+        gap:10px;
+    }
+
+    input{
+        flex:1;
+        padding:8px;
+        border:1px solid #ccc;
+        border-radius:6px;
+        outline:none;
+    }
+
+    #addBtn{
+        padding:8px 16px;
+        background:#5f828a;
+        color:white;
+        border:none;
+        border-radius:6px;
+        cursor:pointer;
+    }
+
+    #search{
+        width:76%;
+        margin-top:12px;
+        padding:8px;
+        border-radius:6px;
+        border:1px solid #ccc;
+    }
+
+    ul{ list-style:none; padding:0; margin-top:20px; }
+
+    li{
+        background:#ffffff;
+        padding:10px;
+        border-radius:6px;
+        margin-bottom:10px;
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        border:1px solid #5f828a;
+
+        opacity:0;
+        transform:translateY(10px);
+        transition:0.4s ease;
+    }
+
+    .show{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+    .left{
+        display:flex;
+        align-items:center;
+        gap:8px;
+    }
+
+    .circle{
+        width:10px;
+        height:10px;
+        border-radius:40%;
+        border:1.5px solid #5f828a;
+        cursor:pointer;
+    }
+
+    .completed .circle{
+        background:#88e0ad;
+        border-color:#5f828a;
+    }
+
+    .completed span{
+        color:#7d7d7d;
+    }
+
+    .deleteBtn{
+        background:none;
+        border:none;
+        color:red;
+        cursor:pointer;
+        font-weight:bold;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="boxStyle">
+
+    <h2>To-Do List</h2>
+
+    <div class="dataArea">
+        <input id="taskInput" type="text" placeholder="Add a task">
+        <button id="addBtn">Add</button>
+    </div>
+
+    <input id="search" type="text" placeholder="Search…">
+
+    <ul id="taskList"></ul>
+
+</div>
+
+
+
+</body>
+</html>
+
+
