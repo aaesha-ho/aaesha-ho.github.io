@@ -247,7 +247,7 @@
 
     // Search
     search.addEventListener("input", () => {
-    const myWords = search.value.toLowerCase.trim(); // The word we are searching for
+    const myWords = search.value.toLowerCase(); // The word we are searching for
     let found = false; //start by assuming no tasks are found
 
     document.querySelectorAll("li").forEach(myTask => {
