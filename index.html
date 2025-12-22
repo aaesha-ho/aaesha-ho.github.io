@@ -18,8 +18,7 @@
         min-height: 10vh;
 }
 
-
-    h2 {
+    h3 {
         font-weight: bold;
         font-style: italic;
 }
@@ -33,7 +32,7 @@
         box-shadow:0 4px 10px rgba(0,0,0,0.1);
     }
 
-    h2{ text-align:center; }
+    h3{ text-align:center; }
 
     .dataArea{
         display:flex;
@@ -119,6 +118,8 @@
     }
 
 
+
+
 </style>
 </head>
 <body>
@@ -134,13 +135,174 @@
 
     <input id="search" type="text" placeholder="Search…">
 
+    <h3 id="noResult" style="text-align:center; color:#104d57; display:none;">
+    You didn’t find any tasks :|
+    </h3>
+
+
+    <h3 id="yourTitle" style="margin-top:20px; text-align:center; display:none;">Your Tasks</h3>
     <ul id="taskList"></ul>
+
+    <h3 id="completedTitle" style="margin-top:20px; text-align:center; display:none;">Completed Tasks</h3>
+    <ul id="completedList"></ul>
+
 
 </div>
 
+<script>
+    const input = document.getElementById("taskInput");
+    const addBtn = document.getElementById("addBtn");
+    const list = document.getElementById("taskList");
+    const search = document.getElementById("search");
+    const completedList = document.getElementById("completedList");
+    const yourTitle = document.getElementById("yourTitle");
+    const completedTitle = document.getElementById("completedTitle");
+
+
+
+    //Load saved tasks
+    window.onload = () => {
+        // Get tasks from local storage or create an empty array
+        const saved = JSON.parse(localStorage.getItem("tasks")) || [];
+        // Create a row for each saved task
+        saved.forEach(t => addTask(t.text, t.completed, false));
+        updateTitles();
+
+    };
+
+    // Save current tasks to the browser memory
+    function saveTasks(){
+    const tasks = [];
+    document.querySelectorAll("li").forEach(taskItem => {
+        tasks.push({
+            text: taskItem.querySelector("span").textContent,
+            completed: taskItem.classList.contains("completed")
+        });
+    });
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+    //Show or Hide section titles based on list content
+    function updateTitles(){
+    // Your Tasks
+    if(list.children.length > 0){
+        yourTitle.style.display = "block";
+    }else{
+        yourTitle.style.display = "none";
+    }
+
+    // Completed Tasks
+    if(completedList.children.length > 0){
+        completedTitle.style.display = "block";
+    }else{
+        completedTitle.style.display = "none";
+    }
+}
+
+
+
+    //Add Task, the main function to create a task row
+    function addTask(text, isCompleted=false, animate=true){
+    const taskItem = document.createElement("li");
+
+    // Build the inside of the <li>
+    taskItem.innerHTML =
+        '<div class="left">' +
+        '<div class="circle"></div>' + '<span>' + text + '</span>' +
+        '</div>' + '<button class="deleteBtn">Delete</button>';
+
+    if(isCompleted){
+        taskItem.classList.add("completed");
+        completedList.appendChild(taskItem);
+    } else {
+        list.appendChild(taskItem);
+    }
+
+    if(animate){
+        setTimeout(() => taskItem.classList.add("show"), 50);
+    } else {
+        taskItem.classList.add("show");
+    }
+
+    saveTasks(); // save to memory
+    updateTitles();
+
+}
+
+
+    //Add on click
+    addBtn.onclick = () => {
+        if(input.value.trim() !== ""){
+            addTask(input.value.trim());
+            input.value = "";
+        }
+    };
+
+    //Add on Enter key
+    input.addEventListener("keydown", enter => {
+        if(enter.key === "Enter"){
+            addBtn.click();
+        }
+    });
+
+    // Search
+    search.addEventListener("input", () => {
+    const myWords = search.value.toLowerCase.trim(); // The word we are searching for
+    let found = false; //start by assuming no tasks are found
+
+    document.querySelectorAll("li").forEach(myTask => {
+        const taskText = myTask.querySelector("span").textContent.toLowerCase(); // task text
+
+        // if task contains the search word, show it. Otherwise hide tasks
+        if(taskText.includes(myWords)){
+            myTask.style.display = "flex"; //display
+            found = true;
+        }else{
+            myTask.style.display = "none"; //hide
+        }
+    });
+
+    // Show "No Results" message if nothing is found
+    document.getElementById("noResult").style.display =
+        found ? "none" : "block";
+});
+
+
+// Handle clicks on "Delete" or "Complete" buttons
+// Complete + Delete
+document.addEventListener("click", (event) => {
+    const myTask = event.target.closest("li");
+
+    if(!myTask) return;
+
+    // complete toggle
+    if(event.target.classList.contains("circle")){
+        myTask.classList.toggle("completed");
+
+        if(myTask.classList.contains("completed")){
+            completedList.appendChild(myTask);
+        }else{
+            list.appendChild(myTask);
+        }
+
+        saveTasks();
+        updateTitles();
+    }
+
+    // delete
+    if(event.target.classList.contains("deleteBtn")){
+        myTask.remove();
+        saveTasks();
+        updateTitles();
+    }
+});
+
+
+</script>
 
 
 </body>
 </html>
+
 
 
